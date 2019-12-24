@@ -18,3 +18,7 @@ main {
 footer {
   margin-top: 20px;
 }
+
+.input-field label {
+  pointer-events: auto !important;
+}
