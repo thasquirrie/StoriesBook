@@ -47,7 +47,13 @@
       $('select').material_select();
     });
 
-    CKEDITOR.replace('body');
+    CKEDITOR.replace('body', {
+      plugins: 'wysiwygarea,toolbar,basicstyles,link'
+    });
+    CKEDITOR.editorConfig = function(config) {
+      config.width = 'auto';
+      config.height = 'auto';
+    }
   </script>
 </body>
 
