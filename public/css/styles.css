@@ -22,3 +22,7 @@ footer {
 .input-field label {
   pointer-events: auto !important;
 }
+
+.story-text {
+  height: 120px;
+}

@@ -1,15 +1,25 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
-</head>
-<body>
-  {{!-- {{> _header}} --}}
-  <div class=" ">
-    <h3>Welcome to your page, {{user.firstName}}.</h3>
-  </div>
-</body>
-</html>
+<h1>Welcome {{user.firstName}}</h1>
+<h4>Your Stories</h4>
+{{#if stories}}
+  <table class="striped">
+    <thead>
+      <tr>
+        <th>Title</th>
+        <th>Date</th>
+        <th>Status</th>
+        <th></th>
+      </tr>
+    </thead>
+    <tbody>
+      {{#each stories}}
+        <tr>
+          <td><a href="/stories/show/{{id}}">{{title}}</a></td>
+          <td>{{formatDate date 'MMMM Do YYYY'}}</td>
+          <td>{{status}}</td>
+        </tr>
+      {{/each}}
+    </tbody>
+  </table>
+{{else}}
+  <p>No stories created yet</p>
+{{/if}}
