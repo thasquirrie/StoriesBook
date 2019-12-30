@@ -34,6 +34,17 @@ router.get('/add', ensureAuthenticated, (req, res) => {
   res.render('stories/add');
 });
 
+//Edit single story
+router.get('/edit/:id', ensureAuthenticated, (req, res) => {
+  Story.findOne({
+    _id: req.params.id
+  }).then(story => {
+    res.render('stories/edit', {
+      story
+    })
+  })
+})
+
 //Process add story
 router.post('/', (req, res) => {
   let allowComments;
@@ -56,6 +67,30 @@ router.post('/', (req, res) => {
     .then(story => {
       res.redirect(`/stories/show/${story.id}`);
     })
+})
+
+//Edit Story process
+router.put('/:id', (req, res) => {
+  Story.findOne({
+    _id: req.params.id
+  }).then(story => {
+    let allowComments;
+
+    if (allowComments) {
+      allowComments = true;
+    } else {
+      allowComments = false;
+    }
+
+    story.title = req.body.title
+    story.body = req.body.body
+    story.status = req.body.status
+    story.allowComments = allowComments
+
+    story.save().then(story => {
+      res.redirect('/dashboard')
+    })
+  })
 })
 
 //Get all user stories
