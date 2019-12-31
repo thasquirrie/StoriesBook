@@ -25,8 +25,9 @@ router.get('/show/:id', (req, res) => {
   }).populate('user')
     .then(story => {
     res.render('stories/show', {
-      story    })
+      story    }, console.log(story.allowComments))
   })
+  
 })
 
 //Add story form
@@ -76,12 +77,12 @@ router.put('/:id', (req, res) => {
   }).then(story => {
     let allowComments;
 
-    if (allowComments) {
+    if (req.body.allowComments) {
       allowComments = true;
     } else {
       allowComments = false;
     }
-
+    console.log('allowComments is', allowComments)
     story.title = req.body.title
     story.body = req.body.body
     story.status = req.body.status
@@ -91,6 +92,32 @@ router.put('/:id', (req, res) => {
       res.redirect('/dashboard')
     })
   })
+})
+
+//Delete single stories
+router.delete('/:id', (req, res) => {
+  Story.deleteOne({
+    _id: req.params.id
+  }).then(story => {
+    res.redirect('/dashboard')
+  })
+})
+
+//Add comment
+router.post('/comment/:id', (req, res) => {
+  Story.findOne({
+    _id: req.params.id
+  }).then(story => {
+    const newComment = {
+      commentBody: req.body.commentBody,
+      commentUser: req.user.id
+    }
+    story.comments.unshift(newComment)
+  })
+  Story.save()
+    .then(story => {
+      res.redirect(`/stories/${story.id}`)
+    })
 })
 
 //Get all user stories
