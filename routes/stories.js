@@ -3,19 +3,19 @@ const router = express.Router();
 const mongoose = require('mongoose');
 const Story = mongoose.model('stories');
 const User = mongoose.model('users')
-const {ensureAuthenticated} = require('../helpers/auth');
-const {ensureGuest} = require('../helpers/auth');
+const { ensureAuthenticated } = require('../helpers/auth');
+const { ensureGuest } = require('../helpers/auth');
 
 //Stories index
 router.get('/', (req, res) => {
-  Story.find({status: 'public'})
+  Story.find({ status: 'public' })
     .populate('user')
     .then(stories => {
       res.render('stories/index', {
         stories
       });
     })
-  
+
 })
 
 //Getting Single Story
@@ -23,11 +23,13 @@ router.get('/show/:id', (req, res) => {
   Story.findOne({
     _id: req.params.id
   }).populate('user')
+    .populate('comments.commentUser')
     .then(story => {
-    res.render('stories/show', {
-      story    }, console.log(story.allowComments))
-  })
-  
+      res.render('stories/show', {
+        story
+      })
+    })
+
 })
 
 //Add story form
@@ -113,11 +115,11 @@ router.post('/comment/:id', (req, res) => {
       commentUser: req.user.id
     }
     story.comments.unshift(newComment)
+    story.save()
+      .then(story => {
+        res.redirect(`/stories/show/${story.id}`)
+      })
   })
-  Story.save()
-    .then(story => {
-      res.redirect(`/stories/${story.id}`)
-    })
 })
 
 //Get all user stories
