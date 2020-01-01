@@ -65,7 +65,7 @@ router.post('/', (req, res) => {
   }
 
   if (errors.length > 0) {
-    res.render('/stories/add', {
+    res.render('stories/add', {
       errors,
       title: req.body.title,
       body: req.body.body
