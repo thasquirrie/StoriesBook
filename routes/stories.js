@@ -50,26 +50,48 @@ router.get('/edit/:id', ensureAuthenticated, (req, res) => {
 
 //Process add story
 router.post('/', (req, res) => {
-  let allowComments;
+  const errors = []
 
-  if (req.body.allowComments) {
-    allowComments = true;
-  } else {
-    allowComments = false
+  if (!req.body.title) {
+    errors.push({
+      'text': 'Please enter a title'
+    });
   }
 
-  const newStory = {
-    title: req.body.title,
-    body: req.body.body,
-    status: req.body.status,
-    allowComments,
-    user: req.user.id
+  if (!req.body.body) {
+    errors.push({
+      'text': 'Please enter some details'
+    });
   }
 
-  new Story(newStory).save()
-    .then(story => {
-      res.redirect(`/stories/show/${story.id}`);
+  if (errors.length > 0) {
+    res.render('/stories/add', {
+      errors,
+      title: req.body.title,
+      body: req.body.body
     })
+  } else {
+    let allowComments;
+
+    if (req.body.allowComments) {
+      allowComments = true;
+    } else {
+      allowComments = false
+    }
+
+    const newStory = {
+      title: req.body.title,
+      body: req.body.body,
+      status: req.body.status,
+      allowComments,
+      user: req.user.id
+    }
+
+    new Story(newStory).save()
+      .then(story => {
+        res.redirect(`/stories/show/${story.id}`);
+      })
+  }
 })
 
 //Edit Story process
