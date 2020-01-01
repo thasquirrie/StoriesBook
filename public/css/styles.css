@@ -34,3 +34,14 @@ footer {
 #delete-form {
   display: inline;
 }
+
+.welcome-text {
+  color: aliceblue;
+  text-align: center;
+  margin-bottom: 50px;
+  padding-bottom: 50px;
+}
+
+.btn-danger {
+  
+}
